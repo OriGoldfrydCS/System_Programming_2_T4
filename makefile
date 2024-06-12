@@ -1,17 +1,21 @@
 CXX := g++
 CXXFLAGS := -std=c++11 -Wall -Wextra
+SRC_FILES := main.cpp demo.cpp test.cpp test_counter.cpp
+HEADER_FILES := complex.hpp node.hpp tree.hpp
+EXECUTABLES := main demo test
 
-SRC_FILES := main.cpp
-HEADER_FILES := tree.hpp
+all: $(EXECUTABLES)
 
-EXECUTABLE := tree
+main: main.cpp $(HEADER_FILES)
+	$(CXX) $(CXXFLAGS) -o main main.cpp
 
-all: $(EXECUTABLE)
+demo: demo.cpp $(HEADER_FILES)
+	$(CXX) $(CXXFLAGS) -o demo demo.cpp
 
-$(EXECUTABLE): $(SRC_FILES) $(HEADER_FILES)
-	$(CXX) $(CXXFLAGS) -o $(EXECUTABLE) $(SRC_FILES)
+test: test.cpp test_counter.cpp $(HEADER_FILES)
+	$(CXX) $(CXXFLAGS) -o test test.cpp test_counter.cpp
 
 clean:
-	rm -rf $(EXECUTABLE)
+	rm -rf tree $(EXECUTABLES)
 
 .PHONY: all clean

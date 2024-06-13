@@ -1,7 +1,6 @@
 CXX := g++
 CXXFLAGS = -std=c++17 -Wall -Werror -Wsign-conversion -g
-SRC_FILES := main.cpp demo.cpp test.cpp test_counter.cpp
-HEADER_FILES := complex.hpp node.hpp tree.hpp
+HEADER_FILES := complex.hpp node.hpp tree.hpp pre_order_iterator.hpp post_order_iterator.hpp in_order_iterator.hpp bfs_iterator.hpp dfs_iterator.hpp heap_iterator.hpp
 EXECUTABLES := main demo test
 
 # Valgrind settings
@@ -20,7 +19,7 @@ test: test.cpp test_counter.cpp $(HEADER_FILES)
 
 # Run Valgrind
 valgrind: main test
-	valgrind --tool=memcheck $(VALGRIND_FLAGS) ./Catan 2>&1 | { egrep "lost| at " || true; }
+	valgrind --tool=memcheck $(VALGRIND_FLAGS) ./main 2>&1 | { egrep "lost| at " || true; }
 	valgrind --tool=memcheck $(VALGRIND_FLAGS) ./test 2>&1 | { egrep "lost| at " || true; }
 
 clean:

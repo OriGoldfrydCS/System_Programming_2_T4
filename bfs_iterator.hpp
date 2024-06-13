@@ -1,3 +1,5 @@
+// Email: origoldbsc@gmail.com
+
 #ifndef BFSITERATOR_HPP
 #define BFSITERATOR_HPP
 
@@ -84,7 +86,7 @@ class BFSIterator {
 
             // Enqueue all children of the current node
             if (current) {
-                for (auto child : current->children) 
+                for (auto child : current->get_children()) 
                 {
                     
                     // Ensure that the child pointer is not null

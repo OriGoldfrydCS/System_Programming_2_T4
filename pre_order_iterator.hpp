@@ -1,3 +1,5 @@
+// Email: origoldbsc@gmail.com
+
 #ifndef PREORDERITERATOR_HPP
 #define PREORDERITERATOR_HPP
 
@@ -78,13 +80,14 @@ class PreOrderIterator {
             stack.pop();
 
             // Push children onto the stack in reverse order to process them in left-to-right order
-            if (current->children.size() > 1) 
+            const auto& children = current->get_children();
+            if (children.size() > 1) 
             {
-                stack.push(current->children[1]);
+                stack.push(children[1]);
             }
-            if (!current->children.empty()) 
+            if (!children.empty()) 
             {
-                stack.push(current->children[0]);
+                stack.push(children[0]);
             }
 
             if (!stack.empty()) 

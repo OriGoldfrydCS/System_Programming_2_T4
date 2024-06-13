@@ -1,3 +1,5 @@
+// Email: origoldbsc@gmail.com
+
 #include "doctest.h"
 #include "tree.hpp"
 #include "node.hpp"

@@ -1,8 +1,13 @@
+// Email: origoldbsc@gmail.com
+
 #ifndef TREE_HPP
 #define TREE_HPP
 
 #include <iostream>
 #include <iomanip>
+#include <sstream>
+#include <cmath>
+#include <SFML/Graphics.hpp>
 #include "node.hpp"
 #include "complex.hpp"
 #include "pre_order_iterator.hpp"
@@ -53,7 +58,8 @@ class Tree {
         void add_root(Node<T, k>* node) 
         {
             // Clean up existing root if it exists
-            if (root) {  
+            if (root) 
+            {  
                 delete root;
             }
             root = node;  // Directly use the passed node as the root
@@ -69,9 +75,9 @@ class Tree {
          */
         void add_sub_node(Node<T, k>* parent, Node<T, k>* child) 
         {
-            if (parent && parent->children.size() < k) 
+            if (parent && parent->get_children().size() < k) 
             {
-                parent->children.push_back(child);
+                parent->add_child(child); 
             }
         }
 
@@ -99,55 +105,144 @@ class Tree {
 
 
         /**
-         * @brief Overloads the stream << operator to provide a simple tree output (for debugging).
+         * @brief Overloads the stream << operator to provide a tree output.
          * @param os Output stream.
          * @param tree The tree to be printed.
          * @return Reference to the output stream.
          */
-        friend std::ostream& operator<<(std::ostream& os, const Tree<T, k>& tree) {
-            if (!tree.root) 
+        friend std::ostream& operator<<(std::ostream& os, const Tree<T, k>& tree) 
+        {
+            int depth = tree.calculateDepth(tree.root);         // Calculate the depth of the tree
+            int maxWidth = std::pow(k, depth - 1);              // Calculate the maximum width of the tree based on its depth      
+            int windowWidth = std::max(1200, maxWidth * 100);   // Set the window width based on the maximum width of the tree
+            int windowHeight = std::max(800, depth * 150);      // Set the window height based on the depth of the tree
+
+
+            // Create an SFML window with the calculated dimensions
+            sf::RenderWindow window(sf::VideoMode(static_cast<unsigned int>(windowWidth), static_cast<unsigned int>(windowHeight)), "Tree Visualization");
+            
+            // Set the frame rate limit for the window
+            window.setFramerateLimit(60);
+
+            // Create a view that can be moved 
+            sf::View view(sf::FloatRect(0, 0, windowWidth, windowHeight));
+
+            // Font
+            sf::Font font;
+            if (!font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf")) 
             {
-                return os << "Empty tree";
+                std::cerr << "Error loading font\n";
+                return os;
             }
 
-            std::queue<Node<T, k>*> q;
-            q.push(tree.root);
-            size_t currentLevel = 0;
-            size_t nextLevelCount = 1;
-
-            while (!q.empty()) 
+            // Main event loop
+            while (window.isOpen()) 
             {
-                Node<T, k>* currentNode = q.front();
-                q.pop();
-                nextLevelCount--;
-
-                os << std::setw(10) << currentNode->value << " | ";
-                if (!currentNode->children.empty()) 
+                sf::Event event;
+                while (window.pollEvent(event)) 
                 {
-                    for (const auto& child : currentNode->children) 
+                    if (event.type == sf::Event::Closed) 
                     {
-                        os << child->value << " ";
-                        q.push(child);
+                        window.close();
                     }
-                } 
-                else 
-                {
-                    os << "- ";
-                }
-                os << std::endl;
-
-                if (nextLevelCount == 0) 
-                {
-                    currentLevel++;
-                    nextLevelCount = q.size();
-                    if (nextLevelCount > 0) 
+                    
+                    // Handle mouse wheel scrolling to zoom in and out
+                    if (event.type == sf::Event::MouseWheelScrolled) 
                     {
-                        os << std::string(10 * currentLevel, '-') << std::endl;
+                        if (event.mouseWheelScroll.delta > 0) 
+                        {
+                            view.zoom(0.9f);
+                        } 
+                        else 
+                        {
+                            view.zoom(1.1f);
+                        }
+                    }
+
+                    // Handle arrow keys to move the view
+                    if (event.type == sf::Event::KeyPressed) 
+                    {
+                        if (event.key.code == sf::Keyboard::Up) 
+                        {
+                            view.move(0, -50);
+                        } 
+                        else if (event.key.code == sf::Keyboard::Down) 
+                        {
+                            view.move(0, 50);
+                        } 
+                        else if (event.key.code == sf::Keyboard::Left) 
+                        {
+                            view.move(-50, 0);
+                        } 
+                        else if (event.key.code == sf::Keyboard::Right) 
+                        {
+                            view.move(50, 0);
+                        }
                     }
                 }
+
+                window.clear(sf::Color::White);                      // Clear the window with a white color
+                window.setView(view);                                // Set the view for the window
+                float initialOffset = windowWidth / (2 * maxWidth);  // Calculate the initial offset for drawing nodes
+                tree.drawTree(window, tree.root, font, windowWidth / 2, 50, initialOffset * maxWidth, 0); // Draw the tree
+                window.display();                                    // Display the window content
             }
+
             return os;
         }
+
+        /**
+         * @brief Draws the tree nodes and edges on the window.
+         * @param window The SFML window to draw on.
+         * @param node The current node to draw.
+         * @param font The font used for text.
+         * @param x X-coordinate for drawing the node.
+         * @param y Y-coordinate for drawing the node.
+         * @param offset Offset for child nodes.
+         */
+        void drawTree(sf::RenderWindow& window, Node<T, k>* node, sf::Font& font, float x, float y, float offset, int depth) const {
+            if (!node) return;
+
+            sf::CircleShape circle(20);                 // Create a circle shape to represent the node
+            circle.setFillColor(sf::Color::Black);      // Set the fill color of the circle to black
+            circle.setPosition(x - circle.getRadius(), y - circle.getRadius());     // Set the position of the circle
+
+            // Create a text to display the node's value
+            sf::Text text;
+            text.setFont(font);
+            text.setString(custom_to_string(node->get_value())); 
+            text.setCharacterSize(10);  
+            text.setFillColor(sf::Color::White);  
+
+            // Center the text within the circle
+            sf::FloatRect textRect = text.getLocalBounds();
+            text.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+            text.setPosition(x, y);
+
+            // Draw the circle and text
+            window.draw(circle);
+            window.draw(text);
+
+            float child_y = y + 100;        // Calculate the y-coordinate for the child nodes
+
+            size_t numChildren = node->get_children().size();           // Get the number of children
+            float child_x_start = x - (numChildren - 1) * offset / 2;   // Calculate the starting x-coordinate for the child node  
+
+            // Draw each child node and the line between them
+            for (size_t i = 0; i < numChildren; ++i) 
+            {
+                float child_x = child_x_start + i * offset;  
+
+                sf::Vertex line[] = {
+                    sf::Vertex(sf::Vector2f(x, y), sf::Color::Black),               // Line starts at the current node
+                    sf::Vertex(sf::Vector2f(child_x, child_y), sf::Color::Black)    // Line ends at the child node
+                };
+                window.draw(line, 2, sf::Lines);    // Draw the line
+
+                drawTree(window, node->get_children()[i], font, child_x, child_y, offset / std::max(static_cast<int>(numChildren), 2), depth + 1); 
+            }
+        }
+        
 
     private:
 
@@ -155,17 +250,73 @@ class Tree {
          * @brief Recursively destroys the tree, freeing all nodes.
          * @param node The current node to destroy.
          */
-        void destroyTree(Node<T, k>* node) 
+        void destroyTree(Node<T, k>* root) 
         {
-            if (node) 
+            if (root) 
             {
-                for (auto child : node->children) 
+                // std::cout << "Destroying node with value: " << root->get_value() << std::endl; // For debugging
+                for (auto& child : root->get_children()) 
                 {
-                    destroyTree(child);
+                    destroyTree(child);     // Recursively destroy child nodes
                 }
-                delete node;
+                delete root;        // Delete the current node
+                root = nullptr;     // Clear the pointer after deletion
             }
         }
+
+
+        /**
+         * @brief Recursively calculates the maximum depth of the tree.
+         * @param node The current node to calculate the depth for.
+         * @return The maximum depth of the tree.
+         */
+        int calculateDepth(Node<T, k>* node) const 
+        {
+            if (!node) return 0;        // Base case: if the node is null, return 0
+            int maxDepth = 0;
+            
+            // Calculate the depth of each child node
+            for (auto child : node->get_children())     
+            {
+                maxDepth = std::max(maxDepth, calculateDepth(child));
+            }
+
+            return maxDepth + 1;        // Return the maximum depth plus one for the current node
+        }
+
+
+        /**
+         * @brief Converts values to strings with 2 decimal precision.
+         * @param value The value to be converted.
+         * @return The string representation of the value.
+         */
+        static std::string custom_to_string(const T& value) 
+        {   
+            // If the value is a string, return it directly
+            if constexpr (std::is_same_v<T, std::string>) 
+            {
+                return value;
+            } 
+
+            // If the value is a Complex number, use its toString method
+            else if constexpr (std::is_same_v<T, Complex>) 
+            {
+                return value.toString();
+            } 
+
+            // Format floating-point values with 2 decimal places
+            else if constexpr (std::is_floating_point_v<T>) 
+            {
+                std::ostringstream out;
+                out << std::fixed << std::setprecision(2) << value;
+                return out.str();
+            } 
+            else 
+            {
+                return std::to_string(value);
+            }
+        }
+
     };
 } 
 

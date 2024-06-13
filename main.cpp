@@ -1,3 +1,5 @@
+// Email: origoldbsc@gmail.com
+
 #include <iostream>
 #include <string>
 #include "tree.hpp"
@@ -5,6 +7,7 @@
 #include "complex.hpp"
 
 int main() {
+
     // Binary Tree with more nodes (int)
     ori::Tree<int, 2> binaryTree;
     ori::Node<int, 2>* n1 = new ori::Node<int, 2>(1);
@@ -28,9 +31,6 @@ int main() {
     binaryTree.add_sub_node(n4, n8);
     binaryTree.add_sub_node(n4, n9);
     binaryTree.add_sub_node(n5, n10);
-
-    std::cout << "Binary Tree (int):" << std::endl;
-    std::cout << binaryTree << std::endl;
 
     // Pre-order traversal: 1, 2, 4, 8, 9, 5, 10, 3, 6, 7
     std::cout << "Pre-order traversal:" << std::endl;
@@ -80,6 +80,10 @@ int main() {
     }
     std::cout << std::endl;
 
+    std::cout << "Binary Tree (int):" << std::endl;
+    std::cout << binaryTree;
+
+
     // Trinary Tree with more nodes (double)
     ori::Tree<double, 3> trinaryTree;
     ori::Node<double, 3>* n11 = new ori::Node<double, 3>(3.14);
@@ -103,9 +107,6 @@ int main() {
     trinaryTree.add_sub_node(n13, n18);
     trinaryTree.add_sub_node(n13, n19);
     trinaryTree.add_sub_node(n13, n20);
-
-    std::cout << "Trinary Tree (double):" << std::endl;
-    std::cout << trinaryTree << std::endl;
 
     // BFS traversal: 3.14, 2.71, 1.41, 4.2, 5.5, 6.6, 7.7, 8.8, 9.9, 10
     std::cout << "BFS traversal:" << std::endl;
@@ -131,18 +132,22 @@ int main() {
     }
     std::cout << std::endl;
 
+    std::cout << "Trinary Tree (double):" << std::endl;
+    std::cout << trinaryTree << std::endl;
+
+
     // String Tree with more nodes
     ori::Tree<std::string, 3> stringTree;
-    ori::Node<std::string, 3>* n21 = new ori::Node<std::string, 3>("hello");
-    ori::Node<std::string, 3>* n22 = new ori::Node<std::string, 3>("world");
-    ori::Node<std::string, 3>* n23 = new ori::Node<std::string, 3>("cpp");
-    ori::Node<std::string, 3>* n24 = new ori::Node<std::string, 3>("tree");
-    ori::Node<std::string, 3>* n25 = new ori::Node<std::string, 3>("data");
-    ori::Node<std::string, 3>* n26 = new ori::Node<std::string, 3>("structure");
-    ori::Node<std::string, 3>* n27 = new ori::Node<std::string, 3>("algorithm");
-    ori::Node<std::string, 3>* n28 = new ori::Node<std::string, 3>("programming");
-    ori::Node<std::string, 3>* n29 = new ori::Node<std::string, 3>("language");
-    ori::Node<std::string, 3>* n30 = new ori::Node<std::string, 3>("computer");
+    ori::Node<std::string, 3>* n21 = new ori::Node<std::string, 3>("AAA");
+    ori::Node<std::string, 3>* n22 = new ori::Node<std::string, 3>("BBB");
+    ori::Node<std::string, 3>* n23 = new ori::Node<std::string, 3>("CCC");
+    ori::Node<std::string, 3>* n24 = new ori::Node<std::string, 3>("DDD");
+    ori::Node<std::string, 3>* n25 = new ori::Node<std::string, 3>("EEE");
+    ori::Node<std::string, 3>* n26 = new ori::Node<std::string, 3>("FFF");
+    ori::Node<std::string, 3>* n27 = new ori::Node<std::string, 3>("GGG");
+    ori::Node<std::string, 3>* n28 = new ori::Node<std::string, 3>("HHH");
+    ori::Node<std::string, 3>* n29 = new ori::Node<std::string, 3>("III");
+    ori::Node<std::string, 3>* n30 = new ori::Node<std::string, 3>("GGG");
 
     stringTree.add_root(n21);
     stringTree.add_sub_node(n21, n22);
@@ -154,9 +159,6 @@ int main() {
     stringTree.add_sub_node(n23, n28);
     stringTree.add_sub_node(n23, n29);
     stringTree.add_sub_node(n23, n30);
-
-    std::cout << "String Tree:" << std::endl;
-    std::cout << stringTree << std::endl;
 
     // BFS traversal: hello, world, cpp, tree, data, structure, algorithm, programming, language, computer
     std::cout << "BFS traversal:" << std::endl;
@@ -182,18 +184,23 @@ int main() {
     }
     std::cout << std::endl;
 
+    std::cout << "String Tree:" << std::endl;
+    std::cout << stringTree << std::endl;
+
+
+
     // Complex Tree with more nodes
-    ori::Tree<Complex, 2> complexTree;
-    ori::Node<Complex, 2>* n31 = new ori::Node<Complex, 2>(Complex(1.0, 2.0));
-    ori::Node<Complex, 2>* n32 = new ori::Node<Complex, 2>(Complex(3.0, 4.0));
-    ori::Node<Complex, 2>* n33 = new ori::Node<Complex, 2>(Complex(5.0, 6.0));
-    ori::Node<Complex, 2>* n34 = new ori::Node<Complex, 2>(Complex(7.0, 8.0));
-    ori::Node<Complex, 2>* n35 = new ori::Node<Complex, 2>(Complex(9.0, 10.0));
-    ori::Node<Complex, 2>* n36 = new ori::Node<Complex, 2>(Complex(11.0, 12.0));
-    ori::Node<Complex, 2>* n37 = new ori::Node<Complex, 2>(Complex(13.0, 14.0));
-    ori::Node<Complex, 2>* n38 = new ori::Node<Complex, 2>(Complex(15.0, 16.0));
-    ori::Node<Complex, 2>* n39 = new ori::Node<Complex, 2>(Complex(17.0, 18.0));
-    ori::Node<Complex, 2>* n40 = new ori::Node<Complex, 2>(Complex(19.0, 20.0));
+    ori::Tree<Complex, 3> complexTree;
+    ori::Node<Complex, 3> * n31 = new ori::Node<Complex, 3>(Complex(1.0, 2.0));
+    ori::Node<Complex, 3> * n32 = new ori::Node<Complex, 3>(Complex(3.0, 4.0));
+    ori::Node<Complex, 3>* n33 = new ori::Node<Complex, 3>(Complex(5.0, 6.0));
+    ori::Node<Complex, 3>* n34 = new ori::Node<Complex, 3>(Complex(7.0, 8.0));
+    ori::Node<Complex, 3>* n35 = new ori::Node<Complex, 3>(Complex(9.0, 10.0));
+    ori::Node<Complex, 3>* n36 = new ori::Node<Complex, 3>(Complex(11.0, 12.0));
+    ori::Node<Complex, 3>* n37 = new ori::Node<Complex, 3>(Complex(13.0, 14.0));
+    ori::Node<Complex, 3>* n38 = new ori::Node<Complex, 3>(Complex(15.0, 16.0));
+    ori::Node<Complex, 3>* n39 = new ori::Node<Complex, 3>(Complex(17.0, 18.0));
+    ori::Node<Complex, 3>* n40 = new ori::Node<Complex, 3>(Complex(19.0, 20.0));
 
     complexTree.add_root(n31);
     complexTree.add_sub_node(n31, n32);
@@ -205,9 +212,6 @@ int main() {
     complexTree.add_sub_node(n34, n38);
     complexTree.add_sub_node(n34, n39);
     complexTree.add_sub_node(n35, n40);
-
-    std::cout << "Complex Tree:" << std::endl;
-    std::cout << complexTree << std::endl;
 
     // BFS traversal: (1+2i), (3+4i), (5+6i), (7+8i), (9+10i), (11+12i), (13+14i), (15+16i), (17+18i), (19+20i)
     std::cout << "BFS traversal:" << std::endl;
@@ -232,4 +236,188 @@ int main() {
         std::cout << node->get_value() << ", ";
     }
     std::cout << std::endl;
+
+    std::cout << "Complex Tree:" << std::endl;
+    std::cout << complexTree << std::endl;
+
+
+
+    // Large tre
+    ori::Tree<int, 3> largeTree;
+    int currentValue = 1;
+
+    // Create root
+    ori::Node<int, 3>* lroot = new ori::Node<int, 3>(currentValue++);
+    largeTree.add_root(lroot);
+
+    // First level
+    ori::Node<int, 3>* child1 = new ori::Node<int, 3>(currentValue++);
+    ori::Node<int, 3>* child2 = new ori::Node<int, 3>(currentValue++);
+    ori::Node<int, 3>* child3 = new ori::Node<int, 3>(currentValue++);
+    largeTree.add_sub_node(lroot, child1);
+    largeTree.add_sub_node(lroot, child2);
+    largeTree.add_sub_node(lroot, child3);
+
+    // Second level
+    for (int i = 0; i < 3; i++) 
+    {
+        ori::Node<int, 3>* child = new ori::Node<int, 3>(currentValue++);
+        largeTree.add_sub_node(child1, child);
+    }
+    for (int i = 0; i < 3; i++) 
+    {
+        ori::Node<int, 3>* child = new ori::Node<int, 3>(currentValue++);
+        largeTree.add_sub_node(child2, child);
+    }
+    for (int i = 0; i < 3; i++) 
+    {
+        ori::Node<int, 3>* child = new ori::Node<int, 3>(currentValue++);
+        largeTree.add_sub_node(child3, child);
+    }
+
+    // Third level
+    for (int i = 0; i < 3; i++) 
+    {
+        ori::Node<int, 3>* child = new ori::Node<int, 3>(currentValue++);
+        largeTree.add_sub_node(child1->get_children()[0], child);
+    }
+    for (int i = 0; i < 3; i++) 
+    {
+        ori::Node<int, 3>* child = new ori::Node<int, 3>(currentValue++);
+        largeTree.add_sub_node(child2->get_children()[0], child);
+    }
+    for (int i = 0; i < 3; i++) 
+    {
+        ori::Node<int, 3>* child = new ori::Node<int, 3>(currentValue++);
+        largeTree.add_sub_node(child3->get_children()[0], child);
+    }
+
+    std::cout << "Large 3-ary Tree (int):" << std::endl;
+    std::cout << largeTree;
+
+    // BFS traversal
+    std::cout << "BFS traversal:" << std::endl;
+    for (auto node = largeTree.begin_bfs_scan(); node != largeTree.end_bfs_scan(); ++node) {
+        std::cout << node->get_value() << " ";
+    }
+    std::cout << std::endl;
+
+    // DFS traversal
+    std::cout << "DFS traversal:" << std::endl;
+    for (auto node = largeTree.begin_dfs_scan(); node != largeTree.end_dfs_scan(); ++node) {
+        std::cout << node->get_value() << " ";
+    }
+    std::cout << std::endl;
+
+    // Heap traversal
+    std::cout << "Heap traversal:" << std::endl;
+    for (auto node = largeTree.myHeap(); node != largeTree.end_heap(); ++node) {
+        std::cout << node->get_value() << " ";
+    }
+    std::cout << std::endl;
+
+
+
+    // 1-ary Tree with double values
+    ori::Tree<double, 1> doubleTree;
+    ori::Node<double, 1>* dn1 = new ori::Node<double, 1>(1.14);
+    ori::Node<double, 1>* dn2 = new ori::Node<double, 1>(2.44);
+    ori::Node<double, 1>* dn3 = new ori::Node<double, 1>(3.78);
+    ori::Node<double, 1>* dn4 = new ori::Node<double, 1>(4.09);
+    ori::Node<double, 1>* dn5 = new ori::Node<double, 1>(5.77);
+    ori::Node<double, 1>* dn6 = new ori::Node<double, 1>(6.07);
+    ori::Node<double, 1>* dn7 = new ori::Node<double, 1>(7.01);
+    ori::Node<double, 1>* dn8 = new ori::Node<double, 1>(8.67);
+    ori::Node<double, 1>* dn9 = new ori::Node<double, 1>(9.32);
+    ori::Node<double, 1>* dn10 = new ori::Node<double, 1>(10.57);
+
+    doubleTree.add_root(dn1);
+    doubleTree.add_sub_node(dn1, dn2);
+    doubleTree.add_sub_node(dn2, dn3);
+    doubleTree.add_sub_node(dn3, dn4);
+    doubleTree.add_sub_node(dn4, dn5);
+    doubleTree.add_sub_node(dn5, dn6);
+    doubleTree.add_sub_node(dn6, dn7);
+    doubleTree.add_sub_node(dn7, dn8);
+    doubleTree.add_sub_node(dn8, dn9);
+    doubleTree.add_sub_node(dn9, dn10);
+
+    // BFS traversal
+    std::cout << "BFS traversal:" << std::endl;
+    for (auto node = doubleTree.begin_bfs_scan(); node != doubleTree.end_bfs_scan(); ++node) 
+    {
+        std::cout << node->get_value() << " ";
+    }
+    std::cout << std::endl;
+
+    // DFS traversal
+    std::cout << "DFS traversal:" << std::endl;
+    for (auto node = doubleTree.begin_dfs_scan(); node != doubleTree.end_dfs_scan(); ++node) 
+    {
+        std::cout << node->get_value() << " ";
+    }
+    std::cout << std::endl;
+
+    // Heap traversal
+    std::cout << "Heap traversal:" << std::endl;
+    for (auto node = doubleTree.myHeap(); node != doubleTree.end_heap(); ++node) 
+    {
+        std::cout << node->get_value() << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "1-ary Tree of double:" << std::endl;
+    std::cout << doubleTree;
+
+
+
+    // 3-ary Tree with an upside-down 'V' shape
+    ori::Tree<int, 3> vTree;
+
+    ori::Node<int, 3>* rootNode = new ori::Node<int, 3>(20);
+    vTree.add_root(rootNode);
+
+    ori::Node<int, 3>* left1 = new ori::Node<int, 3>(15);
+    ori::Node<int, 3>* left2 = new ori::Node<int, 3>(10);
+    ori::Node<int, 3>* left3 = new ori::Node<int, 3>(5);
+
+    ori::Node<int, 3>* right1 = new ori::Node<int, 3>(25);
+    ori::Node<int, 3>* right2 = new ori::Node<int, 3>(30);
+    ori::Node<int, 3>* right3 = new ori::Node<int, 3>(35);
+
+    vTree.add_sub_node(rootNode, left1);
+    vTree.add_sub_node(left1, left2);
+    vTree.add_sub_node(left2, left3);
+
+    vTree.add_sub_node(rootNode, right1);
+    vTree.add_sub_node(right1, right2);
+    vTree.add_sub_node(right2, right3);
+
+    std::cout << "BFS traversal of V-shaped Tree:" << std::endl;
+    for (auto node = vTree.begin_bfs_scan(); node != vTree.end_bfs_scan(); ++node) 
+    {
+        std::cout << node->get_value() << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "DFS traversal of V-shaped Tree:" << std::endl;
+    for (auto node = vTree.begin_dfs_scan(); node != vTree.end_dfs_scan(); ++node) 
+    {
+        std::cout << node->get_value() << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Heap traversal:" << std::endl;
+    try {
+        for (auto node = vTree.myHeap(); node != vTree.end_heap(); ++node) {
+            std::cout << node->get_value() << " ";
+        }
+    } catch (std::exception& e) {
+        std::cerr << "Error during heap traversal: " << e.what() << std::endl;
+    }
+    std::cout << std::endl;
+
+    std::cout << vTree;
+
+    return 0;
 }

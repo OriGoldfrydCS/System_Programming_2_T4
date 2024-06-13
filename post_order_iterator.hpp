@@ -1,3 +1,5 @@
+// Email: origoldbsc@gmail.com
+
 #ifndef POSTORDERITERATOR_HPP
 #define POSTORDERITERATOR_HPP
 
@@ -35,9 +37,9 @@ class PostOrderIterator {
             {
                 // Push the first unvisited child or break if no unvisited children are left
                 stack.push(current);
-                if (!current->children.empty() && visited.find(current) == visited.end()) 
+                if (!current->get_children().empty() && visited.find(current) == visited.end())                
                 {
-                    current = current->children.front();
+                    current = current->get_children().front();
                 } 
                 else 
                 {
@@ -114,10 +116,10 @@ class PostOrderIterator {
             if (!stack.empty()) 
             {
                 Node<T, k>* parent = stack.top();
-                auto it = std::find(parent->children.begin(), parent->children.end(), current);
+                auto it = std::find(parent->get_children().begin(), parent->get_children().end(), current);
                 
                 // Find the next sibling that hasn't been visited
-                if ((it + 1) != parent->children.end()) 
+                if ((it + 1) != parent->get_children().end())
                 {
                     current = *(it + 1);
                     moveToNextLeaf();   // Move down to the leaf node

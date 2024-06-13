@@ -1,3 +1,5 @@
+// Email: origoldbsc@gmail.com
+
 #ifndef HEAPITERATOR_HPP
 #define HEAPITERATOR_HPP
 
@@ -27,8 +29,9 @@ class HeapIterator {
          */
         struct CompareNodes 
         {
-            bool operator()(Node<T, k>* a, Node<T, k>* b) {
-                return a->value > b->value;
+            bool operator()(Node<T, k>* a, Node<T, k>* b) 
+            {
+                return a->get_value() > b->get_value(); 
             }
         };
 
@@ -46,7 +49,7 @@ class HeapIterator {
             if (node) 
             {
                 heap.push_back(node);
-                for (auto child : node->children) 
+                for (auto child : node->get_children()) 
                 {
                     collectNodes(child);
                 }

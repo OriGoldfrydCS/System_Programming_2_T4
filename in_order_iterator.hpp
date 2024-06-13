@@ -1,3 +1,5 @@
+// Email: origoldbsc@gmail.com
+
 #ifndef INORDERITERATOR_HPP
 #define INORDERITERATOR_HPP
 
@@ -37,9 +39,9 @@ class InOrderIterator {
             while (node != nullptr) 
             {
                 stack.push(node);
-                if (!node->children.empty() && node->children.size() > 0) 
+                if (!node->get_children().empty() && node->get_children().size() > 0) 
                 {
-                    node = node->children[0]; // Go to left child
+                    node = node->get_children()[0]; // Go to left child
                 } 
                 else 
                 {
@@ -103,9 +105,10 @@ class InOrderIterator {
             stack.pop();
 
             // Process the right subtree if it exists
-            if (current->children.size() > 1) 
+            const auto& children = current->get_children();
+            if (children.size() > 1) 
             {
-                pushLeft(current->children[1]); 
+                pushLeft(children[1]); 
             }
 
             if (!stack.empty()) 

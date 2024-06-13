@@ -1,6 +1,5 @@
-/**
- * Demo app for Ex4
- */
+// Email: origoldbsc@gmail.com
+
 #include <iostream>
 #include <string>
 #include "node.hpp"
@@ -79,7 +78,7 @@ int main()
         cout << node->get_value() << endl;
     } // prints: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6
 
-    cout << tree; // Should print the graph using GUI.
+    cout << tree;   // Should print the graph using GUI.
 
     Tree<int, 3> three_ary_tree;
     Node<int, 3>* root_node_3 = new Node<int, 3>(1);

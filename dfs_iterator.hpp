@@ -1,3 +1,5 @@
+// Email: origoldbsc@gmail.com
+
 #ifndef DFSITERATOR_HPP
 #define DFSITERATOR_HPP
 
@@ -70,7 +72,8 @@ class DFSIterator {
             stack.pop();
 
             // Push all children of the current node onto the stack, in reverse order to visit the leftmost child first
-            for (auto it = current->children.rbegin(); it != current->children.rend(); ++it) 
+            const auto& children = current->get_children(); 
+            for (auto it = children.rbegin(); it != children.rend(); ++it) 
             {
                 stack.push(*it);
             }

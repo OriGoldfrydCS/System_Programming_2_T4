@@ -45,7 +45,6 @@ public:
         }
     }
 
-
     // Iterators
     class PreOrderIterator {
     public:
@@ -426,44 +425,44 @@ public:
     }
 
 
-    // Output operator
-     friend std::ostream& operator<<(std::ostream& os, const Tree<T, k>& tree) {
-    if (!tree.root) {
-        return os << "Empty tree";
-    }
-
-    std::queue<Node<T, k>*> q;
-    q.push(tree.root);
-    int currentLevel = 0;
-    int nextLevelCount = 1;
-
-    while (!q.empty()) {
-        Node<T, k>* currentNode = q.front();
-        q.pop();
-        nextLevelCount--;
-
-        os << std::setw(10) << currentNode->value << " | ";
-        if (!currentNode->children.empty()) {
-            for (const auto& child : currentNode->children) {
-                os << child->value << " ";
-                q.push(child);
-            }
-        } else {
-            os << "- ";
+    // Output operator for debuging
+    friend std::ostream& operator<<(std::ostream& os, const Tree<T, k>& tree) {
+        if (!tree.root) {
+            return os << "Empty tree";
         }
-        os << std::endl;
 
-        if (nextLevelCount == 0) {
-            currentLevel++;
-            nextLevelCount = q.size();
-            if (nextLevelCount > 0) {
-                os << std::string(10 * currentLevel, '-') << std::endl;
+        std::queue<Node<T, k>*> q;
+        q.push(tree.root);
+        size_t currentLevel = 0;
+        size_t nextLevelCount = 1;
+
+        while (!q.empty()) {
+            Node<T, k>* currentNode = q.front();
+            q.pop();
+            nextLevelCount--;
+
+            os << std::setw(10) << currentNode->value << " | ";
+            if (!currentNode->children.empty()) {
+                for (const auto& child : currentNode->children) {
+                    os << child->value << " ";
+                    q.push(child);
+                }
+            } else {
+                os << "- ";
+            }
+            os << std::endl;
+
+            if (nextLevelCount == 0) {
+                currentLevel++;
+                nextLevelCount = q.size();
+                if (nextLevelCount > 0) {
+                    os << std::string(10 * currentLevel, '-') << std::endl;
+                }
             }
         }
-    }
 
-    return os;
-}
+        return os;
+    }
 
 private:
  

@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 
+using std::vector;
 namespace ori {
 
 /**
@@ -23,9 +24,15 @@ class HeapIterator {
 
         /**
          * @struct CompareNodes
-         * @brief Functor for comparing two nodes based on their values.
-         * This functor enables the heap to maintain an order based on the node values, using a greater-than
-         * comparison to form a min-heap.
+         * @brief Functor for comparing two nodes based on their values, and acts as comparator.
+         * This functor checks if the value of node `a` is greater than the value of node `b`.
+         * By providing this comparison to heap algorithms, it ensures that the smallest element 
+         * is always at the front of the heap, thus maintaining a min-heap structure.
+         *
+         * @details
+         * (1) The operator() is called by heap algorithms to compare two elements.
+         * (2) If `a` is greater than `b`, it returns true, which the heap algorithms use to arrange
+         * the elements such that the smallest element can bubble up to the front.
          */
         struct CompareNodes 
         {
@@ -35,7 +42,7 @@ class HeapIterator {
             }
         };
 
-        std::vector<Node<T, k>*> heap;      // Container to store the nodes in heap order
+        vector<Node<T, k>*> heap;      // Vector to store the nodes in heap order
 
 
         /**
@@ -48,7 +55,10 @@ class HeapIterator {
         {
             if (node) 
             {
-                heap.push_back(node);
+                // Add the current node to the heap vecto
+                this->heap.push_back(node);
+                
+                // Recursively collect all children of the current node
                 for (auto child : node->get_children()) 
                 {
                     collectNodes(child);
@@ -61,7 +71,7 @@ class HeapIterator {
         /**
          * @brief Constructs a HeapIterator from the root of a tree.
          * Initializes the iterator by collecting all nodes from the tree, starting at the specified root,
-         * and arranging them into a heap based on the node values.
+         * and arranging them into a heap based on their values.
          * 
          * @param node The root node of the tree from which to create the heap.
          */
@@ -69,10 +79,20 @@ class HeapIterator {
         {
             if (node) 
             {
-                collectNodes(node);
+                // Collect all nodes from the tree by collectNodes() helper function
+                this->collectNodes(node); 
+
+                // Arrange the collected nodes into a heap based on the node values                                       
                 std::make_heap(heap.begin(), heap.end(), CompareNodes());
             }
         }
+
+
+        /**
+         * @brief Copy constructor.
+         * @param other The HeapIterator to copy.
+         */
+        HeapIterator(const HeapIterator& other) : heap(other.heap) {}
 
 
         /**
@@ -81,7 +101,7 @@ class HeapIterator {
          */
         Node<T, k>& operator*() 
         {
-            return *heap.front();
+            return *this->heap.front();
         }
 
 
@@ -91,7 +111,7 @@ class HeapIterator {
          */
         Node<T, k>* operator->() 
         {
-            return heap.front();
+            return this->heap.front();
         }
 
 
@@ -104,9 +124,23 @@ class HeapIterator {
          */
         HeapIterator& operator++() 
         {
-            std::pop_heap(heap.begin(), heap.end(), CompareNodes());
-            heap.pop_back();
+            // Move the smallest element to the end of the vector
+            std::pop_heap(this->heap.begin(), this->heap.end(), CompareNodes());   // Works as heapify-down
+            
+            // Remove the element from the vector
+            this->heap.pop_back();
             return *this;
+        }
+
+
+        /**
+         * @brief Equality operator to compare this iterator with another iterator.
+         * @param other Another HeapIterator to compare against.
+         * @return True if both iterators are at the same position, false otherwise.
+         */
+        bool operator==(const HeapIterator& other) const 
+        {
+            return this->heap == other.heap; 
         }
 
 
@@ -114,9 +148,23 @@ class HeapIterator {
          * @brief Inequality operator to compare this iterator with another iterator.
          * @param other Another HeapIterator to compare against.
          */
-        bool operator!=(const HeapIterator&) const 
+        bool operator!=(const HeapIterator& other) const 
         {
-            return !heap.empty();
+            return !(*this == other);
+        }
+
+        /**
+         * @brief Assignment operator.
+         * @param other The iterator to assign from.
+         * @return Reference to this iterator after assignment.
+         */
+        HeapIterator& operator=(const HeapIterator& other)
+        {
+            if (this != &other) 
+            {
+                this->heap = other.heap; 
+            }
+            return *this;
         }
     };
 }

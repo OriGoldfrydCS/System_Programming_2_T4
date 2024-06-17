@@ -7,6 +7,7 @@
 
 namespace ori {
 
+
     /**
     * @brief Represents a node in a k-ary tree.
     * The Node class is a template class that holds a value of type T and has a vector of child nodes.
@@ -19,8 +20,9 @@ namespace ori {
     class Node {
         
         private:
-        T value;                            // The value stored in the node
-        std::vector<Node<T, k>*> children;  // The vector of pointers to the child nodes
+
+            T value;                            // The value stored in the node
+            std::vector<Node<T, k>*> children;  // The vector of pointers to the child nodes
 
         public:
 

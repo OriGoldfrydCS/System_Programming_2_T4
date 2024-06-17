@@ -6,6 +6,7 @@
 #include "node.hpp"
 #include <queue>
 
+using std::queue;
 namespace ori {
 
 /**
@@ -20,7 +21,7 @@ class BFSIterator {
     
     private:
 
-        std::queue<Node<T, k>*> queue;      // Queqy used to hold nodes during the BFS traversal
+        queue<Node<T, k>*> bfsQueue;      // Queue used to hold nodes during the BFS traversal
         Node<T, k>* current;                // Pointer to the currect node during the process
     
     public:
@@ -31,18 +32,26 @@ class BFSIterator {
          *
          * @details If the root is not null, it is added to the queue to initiate BFS traversal.
          */
-        explicit BFSIterator(Node<T, k>* root) 
+        BFSIterator(Node<T, k>* root) 
         {
             if (root) 
             {
-                queue.push(root);
-                current = queue.front();
+                this->bfsQueue.push(root);
+                this->current = bfsQueue.front();
             } 
             else 
             {
-                current = nullptr;
+                this->current = nullptr;
             }
         }
+
+
+        /**
+         * @brief Copy constructor for BFSIterator.
+         * Creates a new iterator that is a copy of an existing one.
+         * @param other The iterator to copy from.
+         */
+        BFSIterator(const BFSIterator& other) : bfsQueue(other.bfsQueue), current(other.current) {}
 
 
         /**
@@ -51,7 +60,7 @@ class BFSIterator {
          */
         Node<T, k>& operator*() 
         {
-            return *current;
+            return *this->current;
         }
 
 
@@ -61,7 +70,7 @@ class BFSIterator {
          */
         Node<T, k>* operator->() 
         {
-            return current;
+            return this->current;
         }
 
 
@@ -75,33 +84,48 @@ class BFSIterator {
          */
         BFSIterator& operator++() 
         {
-            if (queue.empty()) 
+
+            // Check if there are no more nodes to visit
+            if (this->bfsQueue.empty()) 
             {
-                current = nullptr;
-                return *this;
+                this->current = nullptr;      // Set current to nullptr indicating the end of the traversal
+                return *this;                 // Return this iterator (equivalent to an end iterator)
             }
 
             // Remove the current node from the queue
-            queue.pop();
+            this->bfsQueue.pop();
 
-            // Enqueue all children of the current node
-            if (current) {
-                for (auto child : current->get_children()) 
+            // If the current node is valid (not nullptr), enqueue all children of the current node
+            if (this->current) 
+            {
+                // Iterate over each child of the current node
+                for (auto child : this->current->get_children()) 
                 {
-                    
                     // Ensure that the child pointer is not null
                     if (child) 
                     {  
-                        queue.push(child);
+                        this->bfsQueue.push(child);      // Add the child to the queue for processing
                     }
                 }
             }
 
             // Set the current node to the next node in the queue, or null if the queue is empty
-            current = !queue.empty() ? queue.front() : nullptr;
+            this->current = !this->bfsQueue.empty() ? this->bfsQueue.front() : nullptr;
 
             return *this;
         }
+
+
+        /**
+         * @brief Equality operator checks if two iterators are equal.
+         * @param other Another BFSIterator to compare with this iterator.
+         * @return True if the iterators point to the same node, false otherwise.
+         */
+        bool operator==(const BFSIterator& other) const 
+        {
+            return this->current == other.current;
+        }
+
 
         /**
          * @brief Inequality operator checks if two iterators are not equivalent.
@@ -110,7 +134,35 @@ class BFSIterator {
          */
         bool operator!=(const BFSIterator& other) const 
         {
-            return current != other.current;
+            return !(*this == other);           // Same as: return current != other.current;
+        }
+
+
+         /**
+         * @brief Assignment operator.
+         * @param other The iterator to assign from.
+         * @return Reference to this iterator after assignment.
+         */
+        BFSIterator& operator=(const BFSIterator& other) 
+        {
+            // Check for "self-assignment"
+            if (this != &other) 
+            {
+                BFSIterator temp(other);                 // Create a temporary iterator using the copy constructor
+                std::swap(this.queue, temp.bfsQueue);       // Swap the queue member of "this" object with the temporary iterator 
+                std::swap(this.current, temp.current);   // Swap the current node pointer with that of the temporary iterator
+            }
+            
+            // Return a reference to this object
+            return *this;
+
+            // Other option stuyind in class
+            // if (this != &other) 
+            // {
+            //     queue = other.queue;
+            //     current = other.current;
+            // }
+            // return *this;
         }
     };
 }

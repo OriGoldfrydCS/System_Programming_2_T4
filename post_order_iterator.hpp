@@ -8,11 +8,12 @@
 #include <set>
 #include <algorithm>
 
+using std::set;
 namespace ori {
 
 /**
  * @class PostOrderIterator
- * @brief Iterator for performing post-order traversal on a tree.
+ * @brief Iterator for performing post-order traversal on a binary tree: LEFT->RIGHT->ROOT.
  *
  * @tparam T Data type of the node's value.
  * @tparam k Maximum number of children a node can have.
@@ -24,35 +25,51 @@ class PostOrderIterator {
 
         Node<T, k>* current;                // Current node being processed
         std::stack<Node<T, k>*> stack;      // Stack to track the path and manage backtracking
-        std::set<Node<T, k>*> visited;      // Set to track visited nodes to prevent reprocessing
+        set<Node<T, k>*> visited;           // Set to track visited nodes to prevent reprocessing
 
 
         /**
          * @brief Moves the iterator to the next leaf node from the current position.
-         * This helper function pushes nodes onto the stack until a leaf node is reached, starting from the current node.
+         * 
+         * This helper function traverses down the tree from the current node, 
+         * pushing nodes onto the stack until a leaf node is reached. 
+         * It starts from the current node and continuously moves to the leftmost child 
+         * (if it exists and hasn't been visited yet) until it finds a leaf node.
+         * Once a leaf node is found, it becomes the current node.
          */
         void moveToNextLeaf() 
         {
+            // Traverse down to the next leaf node
             while (current) 
             {
-                // Push the first unvisited child or break if no unvisited children are left
-                stack.push(current);
-                if (!current->get_children().empty() && visited.find(current) == visited.end())                
+                
+                this->stack.push(current);      // Push the current node onto the stack
+                
+                // Check if the current node has unvisited children
+                if (!this->current->get_children().empty() 
+                && this->visited.find(this->current) == this->visited.end())     // Here I checks if the current node is not found in the visited set        
                 {
-                    current = current->get_children().front();
+                    // Move to the leftmost child (first child in the children vector)
+                    this->current = this->current->get_children().front();
                 } 
+
+                // If no unvisited children, break the loop
                 else 
                 {
                     break;
                 }
             }
-            if (!stack.empty()) 
+
+            // If the stack is not empty, set the current node to the top of the stack
+            if (!this->stack.empty()) 
             {
-                current = stack.top();
+                this->current = this->stack.top();
             } 
+
+            // If the stack is empty, the traversal completed
             else 
             {
-                current = nullptr;
+                this->current = nullptr;
             }
         }
 
@@ -66,12 +83,21 @@ class PostOrderIterator {
          */
         PostOrderIterator(Node<T, k>* root)
         {
-            current = root;
-            if (current) 
+            this->current = root;       // Set the current node to the provided root node
+            
+            // If the current node is not null, move to the next leaf node
+            if (this->current) 
             {
-                moveToNextLeaf();
+                this->moveToNextLeaf();
             }
         }
+
+
+        /**
+         * @brief Copy constructor.
+         * @param other The iterator to copy from.
+         */
+        PostOrderIterator(const PostOrderIterator& other) : current(other.current), stack(other.stack), visited(other.visited) {}
 
 
         /**
@@ -80,7 +106,7 @@ class PostOrderIterator {
          */
         Node<T, k>& operator*() 
         {
-            return *current;
+            return *this->current;
         }
 
 
@@ -90,60 +116,93 @@ class PostOrderIterator {
          */
         Node<T, k>* operator->() 
         {
-            return current;
+            return this->current;
         }
 
 
         /**
          * @brief Advances the iterator to the next node in post-order.
          * This method progresses the iterator by following post-order logic: visiting all children before the node itself.
-         * It handles tree structures by maintaining a stack to backtrack to unvisited nodes.
          * @return Reference to this iterator after incrementing.
          */
         PostOrderIterator& operator++() 
         {
-            if (stack.empty()) 
+            // If the stack is empty, there are no more nodes to visit
+            if (this->stack.empty()) 
             {
-                current = nullptr;
+                this->current = nullptr;
                 return *this;
             }
 
-            // Mark the current node as visited
-            visited.insert(current);
-            stack.pop();
+            this->visited.insert(this->current);        // Mark the current node as visited
+            this->stack.pop();                          // Remove the current node from the stack
 
-            // Process the next node using the stack and visited nodes
-            if (!stack.empty()) 
-            {
-                Node<T, k>* parent = stack.top();
-                auto it = std::find(parent->get_children().begin(), parent->get_children().end(), current);
-                
-                // Find the next sibling that hasn't been visited
+            // Find the next node using the stack and visited nodes
+            if (!this->stack.empty()) 
+            {   
+                // Get the parent node of the current node
+                Node<T, k>* parent = this->stack.top();
+
+                // Find the position of the current node among its siblings
+                auto it = std::find(parent->get_children().begin(), parent->get_children().end(), this->current);       // By find function I identufy the position of the current node within its parent's list of children
+                                                                                                                        // Below is the signature of std::find:
+                                                                                                                        // template<class InputIt, class T>
+                                                                                                                        // InputIt find(InputIt first, InputIt last, const T& value);
+                // Find the next sibling that hasn't been visited (if it + 1 is not equal to end(), it means there is another sibling)
                 if ((it + 1) != parent->get_children().end())
                 {
-                    current = *(it + 1);
-                    moveToNextLeaf();   // Move down to the leaf node
+                    this->current = *(it + 1);  // If the current node has a next sibling, move to it
+                    this->moveToNextLeaf();     // Move down to the leaf node from the current position
                 } 
+
+                // If no unvisited siblings are left, move up to the parent
                 else 
                 {
-                    current = parent;
+                    this->current = parent;
                 }
             } 
             else 
             {
-                current = nullptr;
+                this->current = nullptr;
             }
             return *this;
         }
 
 
-         /**
+        /**
+         * @brief Compares this iterator with another for equality.
+         * @param other The iterator to compare against.
+         * @return True if the iterators point to the same node, otherwise false.
+         */
+        bool operator==(const PostOrderIterator& other) const 
+        {
+            return this->current == other.current;
+        }
+
+        /**
          * @brief Compares this iterator with another for inequality.
          * @param other The iterator to compare against.
          */
         bool operator!=(const PostOrderIterator& other) const 
         {
-            return current != other.current;
+            return !(*this == other);
+        }
+
+
+        /**
+         * @brief Assignment operator to assign one iterator to another.
+         * @param other The iterator to assign from.
+         * @return Reference to this iterator after assignment.
+         */
+        PostOrderIterator& operator=(const PostOrderIterator& other) 
+        {
+            if (this != &other) 
+            {
+                this->current = other.current;
+                this->stack = other.stack;
+                this->visited = other.visited;
+            }
+            return *this;
         }
     };
 }

@@ -82,7 +82,6 @@ int main()
 
     cout << " " << endl;
 
-
     Tree<int, 3> three_ary_tree;
     Node<int, 3>* root_node_3 = new Node<int, 3>(1);
     Node<int, 3>* n1_3 = new Node<int, 3>(2);
@@ -108,7 +107,6 @@ int main()
      *   /        |
      *  1.5      1.6
      */
-    
     
     return 0;
 }

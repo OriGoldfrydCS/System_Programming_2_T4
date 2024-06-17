@@ -17,7 +17,6 @@
 #include "dfs_iterator.hpp"
 #include "heap_iterator.hpp"
 
-
 namespace ori {
 
 /**
@@ -123,6 +122,7 @@ class Tree {
             
             // Set the frame rate limit for the window
             window.setFramerateLimit(60);
+            window.setVerticalSyncEnabled(true);
 
             // Create a view that can be moved 
             sf::View view(sf::FloatRect(0, 0, windowWidth, windowHeight));

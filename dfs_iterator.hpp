@@ -5,7 +5,9 @@
 
 #include "node.hpp"
 #include <stack>
+#include <algorithm>
 
+using std::stack;
 namespace ori {
 
 /**
@@ -19,42 +21,47 @@ template <typename T, int k>
 class DFSIterator {
 
     private:
-        std::stack<Node<T, k>*> stack;      // Stack used to hold nodes during the DFS traversal
+        stack<Node<T, k>*> dfsStack;      // Stack used to hold nodes during the DFS traversal
     
     public:
         
         /**
-         * @brief Constructs a DFSIterator starting at the specified node of a tree.
-         * The constructor initializes the traversal by pushing the starting node onto the stack,
-         * if it is not null.
+         * @brief Constructs a DFSIterator starting at the specified node of a tree (which is the "currect" node).
+         * The constructor initializes the traversal by pushing the starting node onto the stack, if it is not null.
          * @param node Pointer to the initial node from where DFS traversal begins.
          */
-        DFSIterator(Node<T, k>* node) : stack() 
+        DFSIterator(Node<T, k>* node) : dfsStack() 
         {
             if (node) 
             {
-                stack.push(node);
+                this->dfsStack.push(node);
             }
         }
 
+        /**
+         * @brief Copy constructor.
+         * @param other The DFSIterator to copy.
+         */
+        DFSIterator(const DFSIterator& other) : dfsStack(other.dfsStack) {}
+
 
         /**
-         * @brief Dereference operator to access the current node's content.
+         * @brief Dereference operator to access the current node's *content*.
          * @return Reference to the data stored in the current node.
          */
         Node<T, k>& operator*() 
         {
-            return *stack.top();
+            return *this->dfsStack.top();
         }
 
 
         /**
-         * @brief Arrow operator to able access to the current node's members.
+         * @brief Arrow operator to able access to the current node's members (the top element in the stack).
          * @return Pointer to the current node.
          */
         Node<T, k>* operator->() 
         {
-            return stack.top();
+            return this->dfsStack.top();
         }
 
 
@@ -68,25 +75,68 @@ class DFSIterator {
          */
         DFSIterator& operator++() 
         {
-            Node<T, k>* current = stack.top();
-            stack.pop();
+            Node<T, k>* current = this->dfsStack.top();
+            this->dfsStack.pop();
 
-            // Push all children of the current node onto the stack, in reverse order to visit the leftmost child first
+            // Push all children of the current node onto the stack, in reverse order to visit the leftmost child first.
             const auto& children = current->get_children(); 
             for (auto it = children.rbegin(); it != children.rend(); ++it) 
             {
-                stack.push(*it);
+                this->dfsStack.push(*it);
             }
             return *this;
         }
+
+
+        /**
+         * @brief Equality operator.
+         * Compares this iterator with another for equivalence.
+         * @param other Another DFSIterator to compare to.
+         * @return True if both iterators have the same current node, false otherwise.
+         */
+        bool operator==(const DFSIterator& other) const
+        {
+            // Check if both stacks are empty
+            if (this->dfsStack.empty() && other.dfsStack.empty()) 
+            {
+                return true;
+            }
+
+            // Check if both stacks are not empty and have the same element on the top
+            else if (!this->dfsStack.empty() && !other.dfsStack.empty()) 
+            {
+                return this->dfsStack.top() == other.dfsStack.top();
+            }
+
+            // One stack is empty and the other is not
+            else 
+            {
+                return false;
+            }
+        }
+
 
         /**
          * @brief Inequality operator checks if two iterators are not equivalent.
          * @param other Another DFSIterator to compare with this iterator.
          */
-        bool operator!=(const DFSIterator&) 
+        bool operator!=(const DFSIterator& other) 
         {
-            return !stack.empty();
+            return !(*this == other);
+        }
+
+        /**
+         * @brief Assignment operator.
+         * @param other The DFSIterator to assign from.
+         * @return Reference to this instance after assignment.
+         */
+        DFSIterator& operator=(const DFSIterator& other)
+        {
+            if (this != &other) 
+            {
+                this->dfsStack = other.dfsStack;    // Copy the stack
+            }
+            return *this;
         }
     };
 }

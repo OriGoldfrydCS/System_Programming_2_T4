@@ -4,7 +4,7 @@
 This project provides a generic implementation of a K-ary tree data structure, where each node can have up to k children.
 
 The tree supports various traversal methods, including Breadth-First Search (BFS), Depth-First Search (DFS), In-order, Pre-order, and Post-order traversals. Additionally, the tree can be traversed as a min-heap.
-The project also includes a visualization component that uses the SFML (Simple and Fast Multimedia Library) library to display the tree structure in a graphical window. Users can interact with the visualization by zooming in and out and panning the view using the mouse wheel and arrow keys.
+The project also includes a visualization component that uses the SFML (Simple and Fast Multimedia Library) to display the tree in a graphical window. 
 
 ## Classes
 ### Node Class

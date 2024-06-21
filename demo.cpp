@@ -10,7 +10,6 @@ using namespace std;
 
 int main()
 {
-
     // Binary tree that contains doubles.
     Tree<double> tree;       
     Node<double>* root_node = new Node<double>(1.1);
@@ -83,12 +82,12 @@ int main()
     cout << " " << endl;
 
     Tree<int, 3> three_ary_tree;
-    Node<int, 3>* root_node_3 = new Node<int, 3>(1);
-    Node<int, 3>* n1_3 = new Node<int, 3>(2);
-    Node<int, 3>* n2_3 = new Node<int, 3>(3);
-    Node<int, 3>* n3_3 = new Node<int, 3>(4);
-    Node<int, 3>* n4_3 = new Node<int, 3>(5);
-    Node<int, 3>* n5_3 = new Node<int, 3>(6);
+    Node<int>* root_node_3 = new Node<int>(1);
+    Node<int>* n1_3 = new Node<int>(2);
+    Node<int>* n2_3 = new Node<int>(3);
+    Node<int>* n3_3 = new Node<int>(4);
+    Node<int>* n4_3 = new Node<int>(5);
+    Node<int>* n5_3 = new Node<int>(6);
 
     three_ary_tree.add_root(root_node_3);
     three_ary_tree.add_sub_node(root_node_3, n1_3);

@@ -9,21 +9,19 @@
 
 namespace ori {
 
-
 /**
  * @class InOrderIterator
  * @brief Iterator for performing in-order traversal of a binary tree: LEFT->ROOT->RIGHT.
  * 
  * @tparam T The data type of the elements stored in the tree nodes.
- * @tparam k The maximum number of children any node in the tree can have.
  */
-template <typename T, int k>
+template <typename T>
 class InOrderIterator {
     
     private:
 
-        Node<T, k>* current;                // Pointer to the current node in the traversal
-        std::stack<Node<T, k>*> stack;      // Stack used to manage the traversal of nodes
+        Node<T>* current;                // Pointer to the current node in the traversal
+        std::stack<Node<T>*> stack;      // Stack used to manage the traversal of nodes
 
 
         /**
@@ -32,7 +30,7 @@ class InOrderIterator {
          * This function ensures that the traversal starts with the leftmost node.
          * @param node The node from which to start pushing left children.
          */
-        void pushLeft(Node<T, k>* node) 
+        void pushLeft(Node<T>* node) 
         {
             while (node != nullptr) 
             {
@@ -51,6 +49,26 @@ class InOrderIterator {
             }
         }
 
+
+        /**
+         * @brief Helper function to validate that the tree is binary.
+         * Recursively checks all nodes in the tree to ensure no node has more than two children.
+         * @param node The node from which to start the validation.
+         * @throws std::invalid_argument if any node has more than two children.
+         */
+        void validateBinaryTree(Node<T>* node)
+        {
+            if (!node) return;
+            for (const auto& child : node->get_children()) 
+            {
+                if (node->get_children().size() > 2) 
+                {
+                    throw std::invalid_argument("InOrderIterator can only be used on binary trees.");
+                }
+                validateBinaryTree(child);
+            }
+        }
+
     public:
 
         /**
@@ -60,8 +78,10 @@ class InOrderIterator {
          * 
          * @param root The root node of the tree from which to start the in-order traversal.
          */
-        InOrderIterator(Node<T, k>* root) 
+        InOrderIterator(Node<T>* root) 
         {
+            validateBinaryTree(root);         // Validate the tree to ensure it is binary
+
             this->current = nullptr;
             this->pushLeft(root);             // Initialize the stack by pushing left children starting from the root (included)
             
@@ -83,7 +103,7 @@ class InOrderIterator {
          * @brief Dereference operator to access the current node's value.
          * @return Reference to the current node.
          */
-        Node<T, k>& operator*() const 
+        Node<T>& operator*() const 
         {
             return *this->current;
         }
@@ -93,7 +113,7 @@ class InOrderIterator {
          * @brief Arrow operator to able access to the current node's members.
          * @return Pointer to the current node.
          */
-        Node<T, k>* operator->() const 
+        Node<T>* operator->() const 
         {
             return this->current;
         }

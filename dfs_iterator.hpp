@@ -15,13 +15,13 @@ namespace ori {
  * @brief Iterator for performing Depth-First Search (DFS) on a tree.
  *
  * @tparam T The data type of the elements stored in the tree nodes.
- * @tparam k The maximum number of children any node in the tree can have.
  */
-template <typename T, int k>
+template <typename T>
 class DFSIterator {
 
     private:
-        stack<Node<T, k>*> dfsStack;      // Stack used to hold nodes during the DFS traversal
+    
+        stack<Node<T>*> dfsStack;      // Stack used to hold nodes during the DFS traversal
     
     public:
         
@@ -30,7 +30,7 @@ class DFSIterator {
          * The constructor initializes the traversal by pushing the starting node onto the stack, if it is not null.
          * @param node Pointer to the initial node from where DFS traversal begins.
          */
-        DFSIterator(Node<T, k>* node) : dfsStack() 
+        DFSIterator(Node<T>* node) : dfsStack() 
         {
             if (node) 
             {
@@ -49,7 +49,7 @@ class DFSIterator {
          * @brief Dereference operator to access the current node's *content*.
          * @return Reference to the data stored in the current node.
          */
-        Node<T, k>& operator*() 
+        Node<T>& operator*() 
         {
             return *this->dfsStack.top();
         }
@@ -59,7 +59,7 @@ class DFSIterator {
          * @brief Arrow operator to able access to the current node's members (the top element in the stack).
          * @return Pointer to the current node.
          */
-        Node<T, k>* operator->() 
+        Node<T>* operator->() 
         {
             return this->dfsStack.top();
         }
@@ -75,7 +75,7 @@ class DFSIterator {
          */
         DFSIterator& operator++() 
         {
-            Node<T, k>* current = this->dfsStack.top();
+            Node<T>* current = this->dfsStack.top();
             this->dfsStack.pop();
 
             // Push all children of the current node onto the stack, in reverse order to visit the leftmost child first.

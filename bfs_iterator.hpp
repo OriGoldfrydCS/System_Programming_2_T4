@@ -14,15 +14,14 @@ namespace ori {
  * @brief Iterator for Breadth-First Search (BFS) traversing on a tree.
  *
  * @tparam T The data type of the elements stored in the tree nodes.
- * @tparam k The maximum number of children any node in the tree can have.
  */
-template <typename T, int k>
+template <typename T>
 class BFSIterator {
     
     private:
 
-        queue<Node<T, k>*> bfsQueue;      // Queue used to hold nodes during the BFS traversal
-        Node<T, k>* current;                // Pointer to the currect node during the process
+        queue<Node<T>*> bfsQueue;        // Queue used to hold nodes during the BFS traversal
+        Node<T>* current;                // Pointer to the currect node during the process
     
     public:
 
@@ -32,7 +31,7 @@ class BFSIterator {
          *
          * @details If the root is not null, it is added to the queue to initiate BFS traversal.
          */
-        BFSIterator(Node<T, k>* root) 
+        BFSIterator(Node<T>* root) 
         {
             if (root) 
             {
@@ -58,7 +57,7 @@ class BFSIterator {
          * @brief Dereference operator to access the current node's content.
          * @return Reference to the data stored in the current node.
          */
-        Node<T, k>& operator*() 
+        Node<T>& operator*() 
         {
             return *this->current;
         }
@@ -68,7 +67,7 @@ class BFSIterator {
          * @brief Arrow operator to able access to the current node's members.
          * @return Pointer to the current node.
          */
-        Node<T, k>* operator->() 
+        Node<T>* operator->() 
         {
             return this->current;
         }
@@ -99,7 +98,7 @@ class BFSIterator {
             if (this->current) 
             {
                 // Iterate over each child of the current node
-                for (auto child : this->current->get_children()) 
+                for (auto child : current->get_children()) 
                 {
                     // Ensure that the child pointer is not null
                     if (child) 

@@ -5,6 +5,9 @@
 #include "node.hpp"
 #include "complex.hpp"
 #include <sstream>
+#include <stdexcept>
+#include <memory>
+#include <vector>
 
 using namespace ori;
 using namespace std;
@@ -54,9 +57,9 @@ TEST_CASE("Binary Tree Traversals") {
 
 TEST_CASE("Trinary Tree Traversals") {
     Tree<double, 3> trinaryTree;
-    Node<double, 3>* n1 = new Node<double, 3>(3.14);
-    Node<double, 3>* n2 = new Node<double, 3>(2.71);
-    Node<double, 3>* n3 = new Node<double, 3>(1.41);
+    Node<double>* n1 = new Node<double>(3.14);
+    Node<double>* n2 = new Node<double>(2.71);
+    Node<double>* n3 = new Node<double>(1.41);
 
     trinaryTree.add_root(n1);
     trinaryTree.add_sub_node(n1, n2);
@@ -89,9 +92,9 @@ TEST_CASE("Trinary Tree Traversals") {
 
 TEST_CASE("String Tree Traversals") {
     Tree<string, 3> stringTree;
-    Node<string, 3>* n1 = new Node<string, 3>("AAA");
-    Node<string, 3>* n2 = new Node<string, 3>("BBB");
-    Node<string, 3>* n3 = new Node<string, 3>("CCC");
+    Node<string>* n1 = new Node<string>("AAA");
+    Node<string>* n2 = new Node<string>("BBB");
+    Node<string>* n3 = new Node<string>("CCC");
 
     stringTree.add_root(n1);
     stringTree.add_sub_node(n1, n2);
@@ -154,22 +157,56 @@ TEST_CASE("Complex Tree Traversals") {
     CHECK(ss.str() == "1+2i 3+4i 5+6i ");
 }
 
+
 //--------------------------//
-//    Complicated tests     //
+//      Further tests       //
 //--------------------------//
 
+TEST_CASE("Validation for Non-Binary Trees") {
+    Tree<int, 3> trinaryTree;
+    Node<int>* n1 = new Node<int>(1);
+    Node<int>* n2 = new Node<int>(2);
+    Node<int>* n3 = new Node<int>(3);
+    Node<int>* n4 = new Node<int>(4);
 
-TEST_CASE("Complex Int Tree Traversals - 6-ary") {
+    trinaryTree.add_root(n1);
+    trinaryTree.add_sub_node(n1, n2);
+    trinaryTree.add_sub_node(n1, n3);
+    trinaryTree.add_sub_node(n1, n4);
+
+    // Check that using binary tree iterators on a trinary tree throws an exception
+    CHECK_THROWS_AS(trinaryTree.begin_pre_order(), std::invalid_argument);
+    CHECK_THROWS_AS(trinaryTree.begin_in_order(), std::invalid_argument);
+    CHECK_THROWS_AS(trinaryTree.begin_post_order(), std::invalid_argument);
+
+    // Ensure BFS and DFS iterators work for trinary trees
+    stringstream ss;
+    for (auto node = trinaryTree.begin_bfs_scan(); node != trinaryTree.end_bfs_scan(); ++node) 
+    {
+        ss << node->get_value() << " ";
+    }
+    CHECK(ss.str() == "1 2 3 4 ");
+
+    ss.str("");
+    for (auto node = trinaryTree.begin_dfs_scan(); node != trinaryTree.end_dfs_scan(); ++node) 
+    {
+        ss << node->get_value() << " ";
+    }
+    CHECK(ss.str() == "1 2 3 4 ");
+}
+
+
+TEST_CASE("Int Tree Traversals - 6-ary") {
     Tree<int, 6> intTree;
-    Node<int, 6>* n1 = new Node<int, 6>(1);
-    Node<int, 6>* n2 = new Node<int, 6>(20);
-    Node<int, 6>* n3 = new Node<int, 6>(39);
-    Node<int, 6>* n4 = new Node<int, 6>(42);
-    Node<int, 6>* n5 = new Node<int, 6>(53);
-    Node<int, 6>* n6 = new Node<int, 6>(64);
-    Node<int, 6>* n7 = new Node<int, 6>(77);
-    Node<int, 6>* n8 = new Node<int, 6>(89);
-    Node<int, 6>* n9 = new Node<int, 6>(91);
+    Node<int>* n1 = new Node<int>(1);
+    Node<int>* n2 = new Node<int>(20);
+    Node<int>* n3 = new Node<int>(39);
+    Node<int>* n4 = new Node<int>(42);
+    Node<int>* n5 = new Node<int>(53);
+    Node<int>* n6 = new Node<int>(64);
+    Node<int>* n7 = new Node<int>(77);
+    Node<int>* n8 = new Node<int>(89);
+    Node<int>* n9 = new Node<int>(91);
 
     intTree.add_root(n1);
     intTree.add_sub_node(n1, n2);
@@ -206,19 +243,20 @@ TEST_CASE("Complex Int Tree Traversals - 6-ary") {
     CHECK(ss.str() == "1 20 39 42 53 64 77 89 91 ");
 }
 
-TEST_CASE("Complex Double Tree Traversals - 5-ary") 
+
+TEST_CASE("Double Tree Traversals - 5-ary") 
 {
     Tree<double, 5> doubleTree;
-    Node<double, 5>* n1 = new Node<double, 5>(1.123);
-    Node<double, 5>* n2 = new Node<double, 5>(2.456);
-    Node<double, 5>* n3 = new Node<double, 5>(3.789);
-    Node<double, 5>* n4 = new Node<double, 5>(4.012);
-    Node<double, 5>* n5 = new Node<double, 5>(5.345);
-    Node<double, 5>* n6 = new Node<double, 5>(6.678);
-    Node<double, 5>* n7 = new Node<double, 5>(7.901);
-    Node<double, 5>* n8 = new Node<double, 5>(8.234);
-    Node<double, 5>* n9 = new Node<double, 5>(9.567);
-    Node<double, 5>* n10 = new Node<double, 5>(10.891);
+    Node<double>* n1 = new Node<double>(1.123);
+    Node<double>* n2 = new Node<double>(2.456);
+    Node<double>* n3 = new Node<double>(3.789);
+    Node<double>* n4 = new Node<double>(4.012);
+    Node<double>* n5 = new Node<double>(5.345);
+    Node<double>* n6 = new Node<double>(6.678);
+    Node<double>* n7 = new Node<double>(7.901);
+    Node<double>* n8 = new Node<double>(8.234);
+    Node<double>* n9 = new Node<double>(9.567);
+    Node<double>* n10 = new Node<double>(10.891);
 
     doubleTree.add_root(n1);
     doubleTree.add_sub_node(n1, n2);
@@ -256,17 +294,17 @@ TEST_CASE("Complex Double Tree Traversals - 5-ary")
     CHECK(ss.str() == "1.123 2.456 3.789 4.012 5.345 6.678 7.901 8.234 9.567 10.891 ");
 }
 
-TEST_CASE("Complex String Tree Traversals - 4-ary") {
+TEST_CASE("String Tree Traversals - 4-ary") {
     Tree<string, 4> stringTree;
-    Node<string, 4>* n1 = new Node<string, 4>("root");
-    Node<string, 4>* n2 = new Node<string, 4>("alpha");
-    Node<string, 4>* n3 = new Node<string, 4>("beta");
-    Node<string, 4>* n4 = new Node<string, 4>("gamma");
-    Node<string, 4>* n5 = new Node<string, 4>("delta");
-    Node<string, 4>* n6 = new Node<string, 4>("epsilon");
-    Node<string, 4>* n7 = new Node<string, 4>("zeta");
-    Node<string, 4>* n8 = new Node<string, 4>("eta");
-    Node<string, 4>* n9 = new Node<string, 4>("theta");
+    Node<string>* n1 = new Node<string>("root");
+    Node<string>* n2 = new Node<string>("alpha");
+    Node<string>* n3 = new Node<string>("beta");
+    Node<string>* n4 = new Node<string>("gamma");
+    Node<string>* n5 = new Node<string>("delta");
+    Node<string>* n6 = new Node<string>("epsilon");
+    Node<string>* n7 = new Node<string>("zeta");
+    Node<string>* n8 = new Node<string>("eta");
+    Node<string>* n9 = new Node<string>("theta");
 
     stringTree.add_root(n1);
     stringTree.add_sub_node(n1, n2);
@@ -303,18 +341,18 @@ TEST_CASE("Complex String Tree Traversals - 4-ary") {
     CHECK(ss.str() == "alpha beta delta epsilon eta gamma root theta zeta ");
 }
 
-TEST_CASE("Complex Number Tree Traversals - 5-ary") {
+TEST_CASE("Number Tree Traversals - 5-ary") {
     Tree<Complex, 5> complexTree;
-    Node<Complex, 5>* n1 = new Node<Complex, 5>(Complex(1.1, 2.2));
-    Node<Complex, 5>* n2 = new Node<Complex, 5>(Complex(3.3, 4.4));
-    Node<Complex, 5>* n3 = new Node<Complex, 5>(Complex(5.5, 6.6));
-    Node<Complex, 5>* n4 = new Node<Complex, 5>(Complex(7.7, 8.8));
-    Node<Complex, 5>* n5 = new Node<Complex, 5>(Complex(9.9, 11.11));
-    Node<Complex, 5>* n6 = new Node<Complex, 5>(Complex(11.11, 12.12));
-    Node<Complex, 5>* n7 = new Node<Complex, 5>(Complex(13.13, 14.14));
-    Node<Complex, 5>* n8 = new Node<Complex, 5>(Complex(15.15, 16.16));
-    Node<Complex, 5>* n9 = new Node<Complex, 5>(Complex(17.17, 18.18));
-    Node<Complex, 5>* n10 = new Node<Complex, 5>(Complex(19.19, 21.21));
+    Node<Complex>* n1 = new Node<Complex>(Complex(1.1, 2.2));
+    Node<Complex>* n2 = new Node<Complex>(Complex(3.3, 4.4));
+    Node<Complex>* n3 = new Node<Complex>(Complex(5.5, 6.6));
+    Node<Complex>* n4 = new Node<Complex>(Complex(7.7, 8.8));
+    Node<Complex>* n5 = new Node<Complex>(Complex(9.9, 11.11));
+    Node<Complex>* n6 = new Node<Complex>(Complex(11.11, 12.12));
+    Node<Complex>* n7 = new Node<Complex>(Complex(13.13, 14.14));
+    Node<Complex>* n8 = new Node<Complex>(Complex(15.15, 16.16));
+    Node<Complex>* n9 = new Node<Complex>(Complex(17.17, 18.18));
+    Node<Complex>* n10 = new Node<Complex>(Complex(19.19, 21.21));
 
     complexTree.add_root(n1);
     complexTree.add_sub_node(n1, n2);
@@ -352,30 +390,29 @@ TEST_CASE("Complex Number Tree Traversals - 5-ary") {
     CHECK(ss.str() == "1.1+2.2i 3.3+4.4i 5.5+6.6i 7.7+8.8i 9.9+11.11i 11.11+12.12i 13.13+14.14i 15.15+16.16i 17.17+18.18i 19.19+21.21i ");
 }
 
-TEST_CASE("Complex tree for HeapIterator") {
+TEST_CASE("tree for HeapIterator") {
 
     Tree<double, 1> complexTree;
-
-    Node<double, 1>* n1 = new Node<double, 1>(5.3);
-    Node<double, 1>* n2 = new Node<double, 1>(3.1);
-    Node<double, 1>* n3 = new Node<double, 1>(8.7);
-    Node<double, 1>* n4 = new Node<double, 1>(2.2);
-    Node<double, 1>* n5 = new Node<double, 1>(9.6);
-    Node<double, 1>* n6 = new Node<double, 1>(4.4);
-    Node<double, 1>* n7 = new Node<double, 1>(7.7);
-    Node<double, 1>* n8 = new Node<double, 1>(0.5);
-    Node<double, 1>* n9 = new Node<double, 1>(1.3);
-    Node<double, 1>* n10 = new Node<double, 1>(6.9);
-    Node<double, 1>* n11 = new Node<double, 1>(10.2);
-    Node<double, 1>* n12 = new Node<double, 1>(4.8);
-    Node<double, 1>* n13 = new Node<double, 1>(8.4);
-    Node<double, 1>* n14 = new Node<double, 1>(2.7);
-    Node<double, 1>* n15 = new Node<double, 1>(6.1);
-    Node<double, 1>* n16 = new Node<double, 1>(3.9);
-    Node<double, 1>* n17 = new Node<double, 1>(9.8);
-    Node<double, 1>* n18 = new Node<double, 1>(2.5);
-    Node<double, 1>* n19 = new Node<double, 1>(8.1);
-    Node<double, 1>* n20 = new Node<double, 1>(4.6);
+    Node<double>* n1 = new Node<double>(5.3);
+    Node<double>* n2 = new Node<double>(3.1);
+    Node<double>* n3 = new Node<double>(8.7);
+    Node<double>* n4 = new Node<double>(2.2);
+    Node<double>* n5 = new Node<double>(9.6);
+    Node<double>* n6 = new Node<double>(4.4);
+    Node<double>* n7 = new Node<double>(7.7);
+    Node<double>* n8 = new Node<double>(0.5);
+    Node<double>* n9 = new Node<double>(1.3);
+    Node<double>* n10 = new Node<double>(6.9);
+    Node<double>* n11 = new Node<double>(10.2);
+    Node<double>* n12 = new Node<double>(4.8);
+    Node<double>* n13 = new Node<double>(8.4);
+    Node<double>* n14 = new Node<double>(2.7);
+    Node<double>* n15 = new Node<double>(6.1);
+    Node<double>* n16 = new Node<double>(3.9);
+    Node<double>* n17 = new Node<double>(9.8);
+    Node<double>* n18 = new Node<double>(2.5);
+    Node<double>* n19 = new Node<double>(8.1);
+    Node<double>* n20 = new Node<double>(4.6);
 
     // Setting up the tree with one child per node
     complexTree.add_root(n1);
@@ -417,13 +454,13 @@ TEST_CASE("HeapIterator iterates through a tree with 100 nodes in reverse order 
     double startValue = 200;        // Start at the highest value
 
     // Create nodes and adding them to the tree in descending order
-    Node<double, 1>* previous = new Node<double, 1>(startValue);
+    Node<double>* previous = new Node<double>(startValue);
     complexTree.add_root(previous);
 
     for (int i = 1; i < 100; i++) 
     {
         double nodeValue = startValue - i;
-        Node<double, 1>* newNode = new Node<double, 1>(nodeValue);
+        Node<double>* newNode = new Node<double>(nodeValue);
         complexTree.add_sub_node(previous, newNode);        // Each node is a child of the previous node
         previous = newNode;
     }
@@ -566,65 +603,49 @@ TEST_CASE("Empty Tree") {
     CHECK(ss.str() == "");
 }
 
-TEST_CASE("Only Left Children") {
-    Tree<int> leftChildrenTree;
-    Node<int>* n1 = new Node<int>(1);
-    Node<int>* n2 = new Node<int>(2);
-    Node<int>* n3 = new Node<int>(3);
-    Node<int>* n4 = new Node<int>(4);
+TEST_CASE("10-ary Tree with Only Leftmost Child Nodes") {
+    Tree<int, 10> leftmostChildTree;
+    Node<int>* root = new Node<int>(1);
+    leftmostChildTree.add_root(root);
 
-    leftChildrenTree.add_root(n1);
-    leftChildrenTree.add_sub_node(n1, n2);
-    leftChildrenTree.add_sub_node(n2, n3);
-    leftChildrenTree.add_sub_node(n3, n4);
-
-    // Pre-order Traversal
-    stringstream ss;
-    for (auto node = leftChildrenTree.begin_pre_order(); node != leftChildrenTree.end_pre_order(); ++node) 
+    Node<int>* current = root;
+    for (int i = 2; i <= 200; ++i) 
     {
-        ss << node->get_value() << " ";
+        Node<int>* newNode = new Node<int>(i);
+        leftmostChildTree.add_sub_node(current, newNode);
+        current = newNode;
     }
-    CHECK(ss.str() == "1 2 3 4 ");
-
-    // In-order Traversal
-    ss.str("");
-    for (auto node = leftChildrenTree.begin_in_order(); node != leftChildrenTree.end_in_order(); ++node) 
-    {
-        ss << node->get_value() << " ";
-    }
-    CHECK(ss.str() == "4 3 2 1 ");
-
-    // Post-order Traversal
-    ss.str("");
-    for (auto node = leftChildrenTree.begin_post_order(); node != leftChildrenTree.end_post_order(); ++node) 
-    {
-        ss << node->get_value() << " ";
-    }
-    CHECK(ss.str() == "4 3 2 1 ");
 
     // BFS Traversal
-    ss.str("");
-    for (auto node = leftChildrenTree.begin_bfs_scan(); node != leftChildrenTree.end_bfs_scan(); ++node)
+    stringstream ss;
+    for (auto node = leftmostChildTree.begin_bfs_scan(); node != leftmostChildTree.end_bfs_scan(); ++node) 
     {
         ss << node->get_value() << " ";
     }
-    CHECK(ss.str() == "1 2 3 4 ");
+    
+    string expected;
+    for (int i = 1; i <= 200; ++i) 
+    {
+        expected += to_string(i) + " ";
+    }
+    CHECK(ss.str() == expected);
 
     // DFS Traversal
     ss.str("");
-    for (auto node = leftChildrenTree.begin_dfs_scan(); node != leftChildrenTree.end_dfs_scan(); ++node) 
+    for (auto node = leftmostChildTree.begin_dfs_scan(); node != leftmostChildTree.end_dfs_scan(); ++node) 
     {
         ss << node->get_value() << " ";
     }
-    CHECK(ss.str() == "1 2 3 4 ");
+    CHECK(ss.str() == expected);
 
     // Heap Traversal
     ss.str("");
-    for (auto node = leftChildrenTree.myHeap(); node != leftChildrenTree.end_heap(); ++node) 
+    for (auto node = leftmostChildTree.myHeap(); node != leftmostChildTree.end_heap(); ++node) 
     {
         ss << node->get_value() << " ";
     }
-    CHECK(ss.str() == "1 2 3 4 ");
+    CHECK(ss.str() == expected);
+
 }
 
 

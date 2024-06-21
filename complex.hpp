@@ -40,7 +40,6 @@ class Complex {
         // Friend Function
         friend ostream& operator<<(ostream& os, const Complex& c);
     };
-
 } 
 
 #endif 

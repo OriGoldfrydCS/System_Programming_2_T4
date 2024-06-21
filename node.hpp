@@ -7,22 +7,19 @@
 
 namespace ori {
 
-
     /**
     * @brief Represents a node in a k-ary tree.
     * The Node class is a template class that holds a value of type T and has a vector of child nodes.
-    * Each node can have up to k children.
     *
     * @tparam T The data type of the value stored in the node.
-    * @tparam k The maximum number of children each node can have. Default is 2 (binary tree).
     */
-    template <typename T, int k = 2>
+    template <typename T>
     class Node {
         
         private:
 
             T value;                            // The value stored in the node
-            std::vector<Node<T, k>*> children;  // The vector of pointers to the child nodes
+            std::vector<Node<T>*> children;     // The vector of pointers to the child nodes
 
         public:
 
@@ -43,27 +40,31 @@ namespace ori {
             }
 
             /**
-             * @brief Adds a child node to the current node.
-             * The function adds the child node to the vector of children if the maximum number
-             * of children hasn't been reached.
-             * @param child A pointer to the child node to be added.
+             * @brief Provides access to the vector of child nodes.
+             * @return Reference to the vector of child nodes.
              */
-            void add_child(Node<T, k>* child) 
-            {
-                if (children.size() < k) 
-                {
-                    children.push_back(child);
-                }
+            std::vector<Node<T>*>& get_children() 
+            { 
+                return this->children; 
             }
 
             /**
-             * @brief Returns the children of the node.
-             * @return A reference to the vector of child nodes.
+             * @brief Provides const access to the vector of child nodes.
+             * @return Const reference to the vector of child nodes.
              */
-            const std::vector<Node<T, k>*>& get_children() const 
-            {
-                return children;
+            const std::vector<Node<T>*>& get_children() const 
+            { 
+                return children; 
             }
+
+        /**
+         * @brief Adds a child node to the current node.
+         * @param child Pointer to the node to be added as a child.
+         */
+        void add_child(Node<T>* child) 
+        { 
+            children.push_back(child); 
+        }
     };
 }  
 

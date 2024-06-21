@@ -16,16 +16,15 @@ namespace ori {
  * @brief Iterator for performing post-order traversal on a binary tree: LEFT->RIGHT->ROOT.
  *
  * @tparam T Data type of the node's value.
- * @tparam k Maximum number of children a node can have.
  */
-template <typename T, int k>
+template <typename T>
 class PostOrderIterator {
     
     private:
 
-        Node<T, k>* current;                // Current node being processed
-        std::stack<Node<T, k>*> stack;      // Stack to track the path and manage backtracking
-        set<Node<T, k>*> visited;           // Set to track visited nodes to prevent reprocessing
+        Node<T>* current;                // Current node being processed
+        std::stack<Node<T>*> stack;      // Stack to track the path and manage backtracking
+        set<Node<T>*> visited;           // Set to track visited nodes to prevent reprocessing
 
 
         /**
@@ -73,6 +72,26 @@ class PostOrderIterator {
             }
         }
 
+
+        /**
+         * @brief Helper function to validate that the tree is binary.
+         * Recursively checks all nodes in the tree to ensure no node has more than two children.
+         * @param node The node from which to start the validation.
+         * @throws std::invalid_argument if any node has more than two children.
+         */
+        void validateBinaryTree(Node<T>* node)
+        {
+            if (!node) return;
+            for (const auto& child : node->get_children()) 
+            {
+                if (node->get_children().size() > 2) 
+                {
+                    throw std::invalid_argument("PostOrderIterator can only be used on binary trees.");
+                }
+                validateBinaryTree(child);
+            }
+        }
+
     public:
 
         /**
@@ -81,8 +100,10 @@ class PostOrderIterator {
          * It attempts to move to the first leaf node as a starting point for post-order traversal.
          * @param root Root node of the tree from which to start traversal.
          */
-        PostOrderIterator(Node<T, k>* root)
+        PostOrderIterator(Node<T>* root)
         {
+            validateBinaryTree(root);   // Validate the tree to ensure it is binary
+
             this->current = root;       // Set the current node to the provided root node
             
             // If the current node is not null, move to the next leaf node
@@ -104,7 +125,7 @@ class PostOrderIterator {
          * @brief Dereferences the iterator to access the current node's value.
          * @return Reference to the current node.
          */
-        Node<T, k>& operator*() 
+        Node<T>& operator*() 
         {
             return *this->current;
         }
@@ -114,7 +135,7 @@ class PostOrderIterator {
          * @brief Accesses members of the current node.
          * @return Pointer to the current node.
          */
-        Node<T, k>* operator->() 
+        Node<T>* operator->() 
         {
             return this->current;
         }
@@ -141,7 +162,7 @@ class PostOrderIterator {
             if (!this->stack.empty()) 
             {   
                 // Get the parent node of the current node
-                Node<T, k>* parent = this->stack.top();
+                Node<T>* parent = this->stack.top();
 
                 // Find the position of the current node among its siblings
                 auto it = std::find(parent->get_children().begin(), parent->get_children().end(), this->current);       // By find function I identufy the position of the current node within its parent's list of children

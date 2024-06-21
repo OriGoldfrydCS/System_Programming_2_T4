@@ -88,7 +88,6 @@ namespace ori {
         os << c.real << (c.image >= 0 ? "+" : "") << c.image << "i";
         return os;
     }
-
 }
 
 

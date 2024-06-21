@@ -15,12 +15,13 @@ namespace ori {
  * @brief Iterator for traversing a tree structure as if it were a min heap.
  *
  * @tparam T The data type of the elements stored in the tree nodes.
- * @tparam k The maximum number of children any node in the tree can have.
  */
-template <typename T, int k>
+template <typename T>
 class HeapIterator {
     
     private:
+
+        vector<Node<T>*> heap;      // Vector to store the nodes in heap order
 
         /**
          * @struct CompareNodes
@@ -36,13 +37,11 @@ class HeapIterator {
          */
         struct CompareNodes 
         {
-            bool operator()(Node<T, k>* a, Node<T, k>* b) 
+            bool operator()(Node<T>* a, Node<T>* b) 
             {
                 return a->get_value() > b->get_value(); 
             }
         };
-
-        vector<Node<T, k>*> heap;      // Vector to store the nodes in heap order
 
 
         /**
@@ -51,7 +50,7 @@ class HeapIterator {
          * 
          * @param node The current node to collect.
          */
-        void collectNodes(Node<T, k>* node) 
+        void collectNodes(Node<T>* node) 
         {
             if (node) 
             {
@@ -75,7 +74,7 @@ class HeapIterator {
          * 
          * @param node The root node of the tree from which to create the heap.
          */
-        HeapIterator(Node<T, k>* node) 
+        HeapIterator(Node<T>* node) 
         {
             if (node) 
             {
@@ -99,7 +98,7 @@ class HeapIterator {
          * @brief Dereference operator to access the value of the node at the top of the heap.
          * @return Reference to the value of the node currently at the front of the heap.
          */
-        Node<T, k>& operator*() 
+        Node<T>& operator*() 
         {
             return *this->heap.front();
         }
@@ -109,7 +108,7 @@ class HeapIterator {
          * @brief Arrow operator to facilitate access to the current top node's members.
          * @return Pointer to the node currently at the front of the heap.
          */
-        Node<T, k>* operator->() 
+        Node<T>* operator->() 
         {
             return this->heap.front();
         }

@@ -31,7 +31,7 @@ class Tree {
 
     public:
 
-        Node<T, k>* root = nullptr;         // Pointer to the root node of the tree
+        Node<T>* root = nullptr;         // Pointer to the root node of the tree
 
         /**
          * @brief Constructor that initializes an empty tree.
@@ -54,7 +54,7 @@ class Tree {
          * 
          * If there is already a root, it gets deleted and replaced by the new node.
          */
-        void add_root(Node<T, k>* node) 
+        void add_root(Node<T>* node) 
         {
             // Clean up existing root if it exists
             if (root) 
@@ -72,35 +72,36 @@ class Tree {
          *
          * The function adds the child node to the parent's list of children if the maximum number hasn't been reached.
          */
-        void add_sub_node(Node<T, k>* parent, Node<T, k>* child) 
+        void add_sub_node(Node<T>* parent, Node<T>* child) 
         {
             if (parent && parent->get_children().size() < k) 
             {
-                parent->add_child(child); 
+                    parent->get_children().push_back(child);
             }
         }
 
+        
         // Iterator access functions
-        PreOrderIterator<T, k> begin_pre_order() { return PreOrderIterator<T, k>(root); }
-        PreOrderIterator<T, k> end_pre_order() { return PreOrderIterator<T, k>(nullptr); }
+        PreOrderIterator<T> begin_pre_order() { return PreOrderIterator<T>(root); }
+        PreOrderIterator<T> end_pre_order() { return PreOrderIterator<T>(nullptr); }
 
-        PostOrderIterator<T, k> begin_post_order() { return PostOrderIterator<T, k>(root); }
-        PostOrderIterator<T, k> end_post_order() { return PostOrderIterator<T, k>(nullptr); }
+        PostOrderIterator<T> begin_post_order() { return PostOrderIterator<T>(root); }
+        PostOrderIterator<T> end_post_order() { return PostOrderIterator<T>(nullptr); }
 
-        InOrderIterator<T, k> begin_in_order() { return InOrderIterator<T, k>(root); }
-        InOrderIterator<T, k> end_in_order() { return InOrderIterator<T, k>(nullptr); }
+        InOrderIterator<T> begin_in_order() { return InOrderIterator<T>(root); }
+        InOrderIterator<T> end_in_order() { return InOrderIterator<T>(nullptr); }
 
-        BFSIterator<T, k> begin_bfs_scan() { return BFSIterator<T, k>(root); }
-        BFSIterator<T, k> end_bfs_scan() { return BFSIterator<T, k>(nullptr); }
+        BFSIterator<T> begin_bfs_scan() { return BFSIterator<T>(root); }
+        BFSIterator<T> end_bfs_scan() { return BFSIterator<T>(nullptr); }
 
-        BFSIterator<T, k> begin() {  return begin_bfs_scan(); }
-        BFSIterator<T, k> end() {  return end_bfs_scan(); }
+        BFSIterator<T> begin() {  return begin_bfs_scan(); }
+        BFSIterator<T> end() {  return end_bfs_scan(); }
 
-        DFSIterator<T, k> begin_dfs_scan() { return DFSIterator<T, k>(root); }
-        DFSIterator<T, k> end_dfs_scan() { return DFSIterator<T, k>(nullptr); }
+        DFSIterator<T> begin_dfs_scan() { return DFSIterator<T>(root); }
+        DFSIterator<T> end_dfs_scan() { return DFSIterator<T>(nullptr); }
 
-        HeapIterator<T, k> myHeap() { return HeapIterator<T, k>(root); }
-        HeapIterator<T, k> end_heap() { return HeapIterator<T, k>(nullptr); }
+        HeapIterator<T> myHeap() { return HeapIterator<T>(root); }
+        HeapIterator<T> end_heap() { return HeapIterator<T>(nullptr); }
 
 
         /**
@@ -113,8 +114,8 @@ class Tree {
         {
             int depth = tree.calculateDepth(tree.root);         // Calculate the depth of the tree
             int maxWidth = std::pow(k, depth - 1);              // Calculate the maximum width of the tree based on its depth      
-            int windowWidth = std::max(1200, maxWidth * 100);   // Set the window width based on the maximum width of the tree
-            int windowHeight = std::max(800, depth * 150);      // Set the window height based on the depth of the tree
+            int windowWidth = 1200;                             // Set the window width based on the maximum width of the tree
+            int windowHeight = 800;                             // Set the window height based on the depth of the tree
 
 
             // Create an SFML window with the calculated dimensions
@@ -122,7 +123,6 @@ class Tree {
             
             // Set the frame rate limit for the window
             window.setFramerateLimit(60);
-            window.setVerticalSyncEnabled(true);
 
             // Create a view that can be moved 
             sf::View view(sf::FloatRect(0, 0, windowWidth, windowHeight));
@@ -200,7 +200,8 @@ class Tree {
          * @param y Y-coordinate for drawing the node.
          * @param offset Offset for child nodes.
          */
-        void drawTree(sf::RenderWindow& window, Node<T, k>* node, sf::Font& font, float x, float y, float offset, int depth) const {
+        void drawTree(sf::RenderWindow& window, Node<T>* node, sf::Font& font, float x, float y, float offset, int depth) const 
+        {
             if (!node) return;
 
             sf::CircleShape circle(20);                 // Create a circle shape to represent the node
@@ -250,17 +251,17 @@ class Tree {
          * @brief Recursively destroys the tree, freeing all nodes.
          * @param node The current node to destroy.
          */
-        void destroyTree(Node<T, k>* root) 
+        void destroyTree(Node<T>* node) 
         {
-            if (root) 
+            if (node) 
             {
                 // std::cout << "Destroying node with value: " << root->get_value() << std::endl; // For debugging
-                for (auto& child : root->get_children()) 
+                for (Node<T>* child : node->get_children()) 
                 {
                     destroyTree(child);     // Recursively destroy child nodes
                 }
-                delete root;        // Delete the current node
-                root = nullptr;     // Clear the pointer after deletion
+                delete node;        // Delete the current node
+                node = nullptr;     // Clear the pointer after deletion
             }
         }
 
@@ -270,7 +271,7 @@ class Tree {
          * @param node The current node to calculate the depth for.
          * @return The maximum depth of the tree.
          */
-        int calculateDepth(Node<T, k>* node) const 
+        int calculateDepth(Node<T>* node) const 
         {
             if (!node) return 0;        // Base case: if the node is null, return 0
             int maxDepth = 0;

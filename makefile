@@ -1,5 +1,4 @@
 # Email: origoldbsc@gmail.com
-
 # To run the main program, type after 'make': ./main
 # To run the demo program, type after 'make demo': ./demo
 # To run the test program, type after 'make test': ./test

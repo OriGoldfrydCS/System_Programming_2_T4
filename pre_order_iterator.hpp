@@ -8,7 +8,6 @@
 
 namespace ori {
 
-
 /**
  * @class PreOrderIterator
  * @brief Iterator for performing pre-order traversal on a binary tree: ROOT->LEFT->RIGHT.
@@ -16,12 +15,33 @@ namespace ori {
  * @tparam T Data type of the node's value.
  * @tparam k Maximum number of children a node can have.
  */
-template <typename T, int k>
+template <typename T>
 class PreOrderIterator {
     
     private:
-        Node<T, k>* current;                // Current node being processed
-        std::stack<Node<T, k>*> stack;      // Stack to manage the traversal order
+
+        Node<T>* current;                // Current node being processed
+        std::stack<Node<T>*> stack;      // Stack to manage the traversal order
+
+
+        /**
+         * @brief Helper function to validate that the tree is binary.
+         * Recursively checks all nodes in the tree to ensure no node has more than two children.
+         * @param node The node from which to start the validation.
+         * @throws std::invalid_argument if any node has more than two children.
+         */
+        void validateBinaryTree(Node<T>* node)
+        {
+            if (!node) return;
+            for (const auto& child : node->get_children()) 
+            {
+                if (node->get_children().size() > 2) 
+                {
+                    throw std::invalid_argument("PreOrderIterator can only be used on binary trees.");
+                }
+                validateBinaryTree(child);
+            }
+        }
 
     public:
 
@@ -30,8 +50,10 @@ class PreOrderIterator {
          * This constructor sets pushes the initial node onto the stack to begin the traversal.
          * @param node Starting node of the traversal.
          */
-        PreOrderIterator(Node<T, k>* node) : current(node) 
+        PreOrderIterator(Node<T>* node) : current(node) 
         {
+            validateBinaryTree(node);       // Validate the tree to ensure it is binary
+
             // If the starting node is not null
             if (this->current) 
             {
@@ -51,7 +73,7 @@ class PreOrderIterator {
          * @brief Dereferences the iterator to access the current node's value.
          * @return Reference to the current node.
          */
-        Node<T, k>& operator*() 
+        Node<T>& operator*() 
         {
             return *this->current;
         }
@@ -61,7 +83,7 @@ class PreOrderIterator {
          * @brief Accesses members of the current node.
          * @return Pointer to the current node.
          */
-        Node<T, k>* operator->() 
+        Node<T>* operator->() 
         {
             return this->current;
         }

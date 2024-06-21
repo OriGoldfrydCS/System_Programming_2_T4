@@ -1,7 +1,7 @@
 # Generic K-ary Tree Implementation with Visualization
 
 ## Overview
-This project provides a generic implementation of a K-ary tree data structure, where each node can have up to k children.
+This project provides a generic implementation of a K-ary tree data structure.
 
 The tree supports various traversal methods, including Breadth-First Search (BFS), Depth-First Search (DFS), In-order, Pre-order, and Post-order traversals. Additionally, the tree can be traversed as a min-heap.
 The project also includes a visualization component that uses the SFML (Simple and Fast Multimedia Library) to display the tree in a graphical window. 
